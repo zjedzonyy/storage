@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('./partials/head.ejs') %>
+<body>
+    <%- include('./partials/nav.ejs') %>
+    <h1>THIS IS YOUR DRIVE</h1>
+    <% folders.forEach(folder => { %>
+      <li><%= folder.name %> </li>
+      
+     <% }) %>
+    <%- include('./partials/footer.ejs') %>
+</body>
+</html>

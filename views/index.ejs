@@ -4,6 +4,29 @@
 <body>
     <%- include('./partials/nav.ejs') %>
     <h1>WELCOME HOME</h1>
+    <% if (!locals.user) { %>
+    <div class="register-user">
+        <% if (locals.errors) {%>
+            <ul>
+              <% errors.forEach(function(error) { %>
+                <li><%= error.msg %></li>
+              <% }); %>
+            </ul>
+          <% } %>
+        <form action="/" method="POST">
+            <label for="email">Email</label>
+            <input type="email" name="username" id="username" required>
+    
+            <label for="password">Password</label>
+            <input type="password" name="password" id="password" required>
+    
+            <button type="submit">Log In</button>
+        </form>
+    </div>
+    <% } else { %>
+    <h1><%= locals.user.email %> </h1>
+    <a href="/log-out">LOG OUT</a>
+    <% } %>
     <%- include('./partials/footer.ejs') %>
 </body>
 </html>

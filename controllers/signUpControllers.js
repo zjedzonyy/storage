@@ -48,6 +48,17 @@ async function registerUser(req, res, next) {
   }
 }
 
+async function verifyLogIn(req, res, next) {
+  try {
+    const email = req.body.email;
+    const givenPassword = req.body.password;
+    const validPassword = await db.getPassword(email);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+}
+
 module.exports = {
   registerUser,
   validationEmail,

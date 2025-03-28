@@ -3,6 +3,7 @@ const { PrismaSessionStore } = require("@quixo3/prisma-session-store");
 const { PrismaClient } = require("@prisma/client");
 const express = require("express");
 const path = require("node:path");
+const signUpControllers = require("./controllers/signUpControllers");
 
 const app = express();
 app.set("views", path.join(__dirname, "views"));
@@ -29,6 +30,16 @@ app.use(
 app.get("/", (req, res) => {
   res.render("index", { title: "Home" });
 });
+
+app.get("/sign-up", (req, res) => {
+  res.render("sign-up", { title: "Sign Up" });
+});
+
+app.post(
+  "/sign-up",
+  signUpControllers.validationEmail,
+  signUpControllers.registerUser
+);
 
 app.listen("3000", () =>
   console.log("Server started listening at port 3000...")

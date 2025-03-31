@@ -53,7 +53,7 @@ model Folder {
   user       User     @relation(fields: [userId], references: [id])
   files      File[]
   parentId   String?
-  parent     Folder?  @relation("FolderHierarchy", fields: [parentId], references: [id])
+  parent     Folder?  @relation("FolderHierarchy", fields: [parentId], references: [id], onDelete: Cascade)
   subfolders Folder[] @relation("FolderHierarchy")
 }
 

@@ -1,0 +1,39 @@
+
+<%
+function renderFolders(folder, user) {
+  let html = `
+    <div class="folder">
+      <div class="folder-header">
+        <span class="folder-name">${folder.name} <a href="/drive/upload:${folder.id}"><button>Add file</button></a> 
+        <form action="/drive" method="POST" class="folder-form">
+          <input type="hidden" name="userId" value="${user.id}">
+          <input type="hidden" name="parentId" value="${folder.id}">
+          <button type="submit" class="new-folder-btn">New Folder</button>
+        </form>
+        <form action="/drive/delete" method="POST" class="folder-form">
+            <input type="hidden" name="userId" value="${user.id}">
+            <input type="hidden" name="parentId" value="${folder.id}">
+            <button type="submit" class="new-folder-btn">Delete</button>
+        </form>
+        <form action="/drive/update" method="POST" class="folder-form">
+            <label for="name">Change name</label>            
+            <input type="text" name="name" id="name" value="${folder.name}">
+            <input type="hidden" name="parentId" value="${folder.id}">
+            <button type="submit" class="new-folder-btn">Change name</button>
+        </form>
+      </div>`;
+  
+  if (folder.subFolders && folder.subFolders.length > 0) {
+    html += '<ul class="subfolder-list">';
+    folder.subFolders.forEach(subFolder => {
+      html += '<li>' + renderFolders(subFolder, user) + '</li>';
+    });
+    html += '</ul>';
+  }
+  
+  html += '</div>';
+  return html;
+}
+%>
+
+<%- renderFolders(folder, user) %>

@@ -35,30 +35,81 @@ async function getUserById(id) {
   return user;
 }
 
-// CREATE ROOT FOLDER
-async function createRootFolder(email, name) {
+// ALLOW USER TO CREATE FOLDER
+async function createFolder(parentId, userId) {
   const folder = await prisma.folder.create({
     data: {
-      name: name,
-      user: email,
+      name: "New Folder",
+      parentId: parentId,
+      userId: userId,
+    },
+  });
+
+  return folder;
+}
+
+async function getUsersRootFolder(id, email) {
+  const folders = await prisma.folder.findMany({
+    where: { userId: id, name: email },
+  });
+
+  return folders;
+}
+
+async function getFolderById(id) {
+  const folder = await prisma.folder.findFirst({
+    where: { id: id },
+  });
+
+  return folder;
+}
+
+async function getSubfolder(parentId) {
+  const subfolders = await prisma.folder.findMany({
+    where: { parentId: parentId },
+  });
+
+  return subfolders;
+}
+
+async function getFiles(folderId) {
+  const files = await prisma.file.findMany({
+    where: {
+      folderId: folderId,
+    },
+  });
+
+  return files;
+}
+
+async function deleteFolder(id) {
+  const folder = await prisma.folder.delete({
+    where: {
+      id: id,
     },
   });
 }
 
-// ALLOW USER TO CREATE FOLDER
-async function createFolder(name, user) {}
-
-async function getUsersFolders(id) {
-  const folders = await prisma.folder.findMany({
-    where: { userId: id },
+async function updateFolder(id, name) {
+  await prisma.folder.update({
+    where: {
+      id: id,
+    },
+    data: {
+      name: name,
+    },
   });
-
-  return folders;
 }
 
 module.exports = {
   addUser,
   getPassword,
   getUserById,
-  getUsersFolders,
+  getUsersRootFolder,
+  createFolder,
+  getSubfolder,
+  deleteFolder,
+  updateFolder,
+  getFolderById,
+  getFiles,
 };

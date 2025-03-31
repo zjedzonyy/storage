@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('./partials/head.ejs') %>
+<%- include('./partials/uploadStyle.ejs') %>
+<body>
+    <%- include('./partials/nav.ejs') %>
+    <h1>YOU CAN UPLOAD FILES HERE</h1>
+    <div class="folder-card">
+      <div class="folder-header">
+        <h1 class="folder-name"><%= folder.name %></h1>
+      </div>
+      
+      <div class="folder-detail">
+        <div class="detail-label">ID:</div>
+        <div class="detail-value"><%= folder.id %></div>
+      </div>
+      
+      <div class="folder-detail">
+        <div class="detail-label">Użytkownik:</div>
+        <div class="detail-value"><%= folder.userId %></div>
+      </div>
+      
+      <div class="folder-detail">
+        <div class="detail-label">Folder nadrzędny:</div>
+        <div class="detail-value">
+          <% if (folder.parentId) { %>
+            <%= folder.parentId %>
+          <% } else { %>
+            Folder główny
+          <% } %>
+        </div>
+      </div>
+      
+      <div class="folder-detail dates">
+        <div class="detail-label">Utworzono:</div>
+        <div class="detail-value"><%= folder.createdAt.toLocaleString() %></div>
+      </div>
+      
+      <div class="folder-detail dates">
+        <div class="detail-label">Ostatnia edycja:</div>
+        <div class="detail-value"><%= folder.updatedAt.toLocaleString() %></div>
+      </div>
+    </div>
+
+
+  <form action="/drive/upload:${folder.id}" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="parentId" id="parentId" value="<%= folder.id %>">
+    <input type="file" name="file" />
+    <button type="submit">Upload</button>
+  </form>
+
+
+        
+    <%- include('./partials/footer.ejs') %>
+</body>
+<script>
+  const btns = document.querySelectorAll('.add');
+  btns.forEach(btn => btn.addEventListener('click', () => {
+    console.log('elo');
+  }))
+</script>
+</html>

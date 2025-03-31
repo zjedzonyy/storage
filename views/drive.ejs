@@ -4,10 +4,34 @@
 <body>
     <%- include('./partials/nav.ejs') %>
     <h1>THIS IS YOUR DRIVE</h1>
-    <% folders.forEach(folder => { %>
-      <li><%= folder.name %> </li>
-      
-     <% }) %>
+
+      <div class="folder">
+        <div class="folder-header">
+          <span class="folder-name"><%= folder.name %></span>
+          <form action="/drive" method="POST" class="folder-form">
+            <input type="hidden" name="userId" value="<%= user.id %>">
+            <input type="hidden" name="parentId" value="<%= folder.id %>">
+            <button type="submit" class="new-folder-btn">New Folder</button>
+          </form>
+        </div>
+        
+        <% if (folder.subFolders && folder.subFolders.length > 0) { %>
+          <ul class="subfolder-list">
+            <% folder.subFolders.forEach(function(subFolder) { %>
+              <li>
+                <%- include('./partials/folderTemplate.ejs', { folder: subFolder, user: user }); %>
+              </li>
+            <% }); %>
+          </ul>
+        <% } %>
+      </div>
+
     <%- include('./partials/footer.ejs') %>
 </body>
+<script>
+  const btns = document.querySelectorAll('.add');
+  btns.forEach(btn => btn.addEventListener('click', () => {
+    console.log('elo');
+  }))
+</script>
 </html>

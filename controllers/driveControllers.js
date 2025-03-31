@@ -1,4 +1,5 @@
 const db = require("../db/queries");
+const supabase = require("../db/supabase");
 
 async function showUsersDrive(req, res, next) {
   try {
@@ -69,9 +70,16 @@ async function getUploadForm(req, res, next) {
     const folder = await db.getFolderById(folderId);
     const files = await db.getFiles(folderId);
 
-    console.log(folderId);
-    console.log(folder);
-    console.log(files);
+    async function downloadFile(src) {
+      try {
+        const { data, error } = await supabase.supabase.storage
+          .from("upload")
+          .createSignedUrl(src, 360);
+        window.location.href = data.signedUrl;
+      } catch (error) {
+        console.error(error);
+      }
+    }
 
     res.render("upload", {
       title: "Upload",
@@ -79,6 +87,7 @@ async function getUploadForm(req, res, next) {
       folderId,
       folder,
       files,
+      downloadFile,
     });
   } catch (error) {
     console.error(error);
@@ -88,11 +97,25 @@ async function getUploadForm(req, res, next) {
 
 async function postUploadForm(req, res, next) {
   try {
-    console.log("uruchamiam kontroler");
-    console.log(req.body.parentId);
-    const parentId = req.body.parentId;
-    const folder = await db.getFolderById(parentId);
-    console.log(folder);
+    const file = req.file;
+    const filePath = `upload/${Date.now()}-${file.originalname}`;
+
+    const { data, error } = await supabase.supabase.storage
+      .from("upload")
+      .upload(filePath, file.buffer, {
+        contentType: file.mimetype,
+      });
+
+    // ADD LINK TO A FILE IN LOCAL DB
+    // TODO: SIZE && MIMETYPE
+    const src = `${supabase.supabaseUrl}/storage/v1/object/public/upload/${filePath}`;
+    const title = "Tu tytul";
+    const folderId = req.body.parentId;
+    const userId = req.body.userId;
+    const size = 10;
+    const mimetype = "txt";
+
+    await db.createFile(src, title, folderId, userId, size, mimetype);
     res.redirect("/");
   } catch (error) {
     console.error(error);

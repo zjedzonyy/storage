@@ -101,6 +101,19 @@ async function updateFolder(id, name) {
   });
 }
 
+async function createFile(src, title, folderId, userId, size, mimetype) {
+  await prisma.file.create({
+    data: {
+      title: title,
+      src: src,
+      folderId: folderId,
+      userId: userId,
+      size: size,
+      mimeType: mimetype,
+    },
+  });
+}
+
 module.exports = {
   addUser,
   getPassword,
@@ -112,4 +125,5 @@ module.exports = {
   updateFolder,
   getFolderById,
   getFiles,
+  createFile,
 };

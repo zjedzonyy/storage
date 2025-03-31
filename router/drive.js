@@ -3,9 +3,12 @@ const auth = require("../controllers/authControllers");
 const db = require("../db/queries");
 const driveControllers = require("../controllers/driveControllers");
 const multer = require("multer");
-const upload = multer({ dest: "uploads/" });
+// const upload = multer({ dest: "uploads/" });
 
 const router = expresss.Router();
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
 router.get("/", auth.isAuthenticate, driveControllers.showUsersDrive);
 router.post("/", auth.isAuthenticate, driveControllers.addFolder);

@@ -42,8 +42,15 @@
       </div>
     </div>
 
+    <% if (files && files.length > 0) { %>
+      <% files.forEach(file => { %>
+        <li><%= file.src %></li>
+        <button class="download-file" onclick="downloadFile('<%= file.src %>')">Download</button>
+        <% }) %>
+    <% } %>
 
   <form action="/drive/upload:${folder.id}" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="userId" id="userId" value="<%= user.id %>">
     <input type="hidden" name="parentId" id="parentId" value="<%= folder.id %>">
     <input type="file" name="file" />
     <button type="submit">Upload</button>

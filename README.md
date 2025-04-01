@@ -14,7 +14,10 @@ Minimalist Cloud Drive is a stripped-down version of Google Drive, allowing user
 
     📥 Download files directly from the cloud
 
-Tech stack: Node.js, Express, Prisma, Supabase, Passport.js, Multer 🚀
+Tech stack: **Node.js, Express, Prisma, Supabase, Passport.js, Multer** 🚀
+
+
+
 
 
 

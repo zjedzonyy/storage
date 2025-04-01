@@ -101,7 +101,15 @@ async function updateFolder(id, name) {
   });
 }
 
-async function createFile(src, title, folderId, userId, size, mimetype) {
+async function createFile(
+  src,
+  title,
+  folderId,
+  userId,
+  size,
+  mimetype,
+  localPath
+) {
   await prisma.file.create({
     data: {
       title: title,
@@ -110,6 +118,7 @@ async function createFile(src, title, folderId, userId, size, mimetype) {
       userId: userId,
       size: size,
       mimeType: mimetype,
+      localPath: localPath,
     },
   });
 }

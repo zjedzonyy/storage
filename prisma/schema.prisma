@@ -33,15 +33,15 @@ model User {
 model File {
   id        String   @id @default(uuid())
   title     String
-  size      Int // rozmiar pliku w bajtach
-  mimeType  String // typ MIME pliku
+  size      Int
+  mimeType  String
   createdAt DateTime @default(now())
-  src       String? // opcjonalny link do pliku w chmurze
-  localPath String? // ścieżka lokalna, jeśli przechowujesz pliki lokalnie
+  src       String? // link to file in a cloud storage (Supabase)
+  localPath String? // file name in the cloud storage
   userId    String
   author    User     @relation(fields: [userId], references: [id])
-  folderId  String? // opcjonalne przypisanie do folderu
-  folder    Folder?  @relation(fields: [folderId], references: [id])
+  folderId  String?
+  folder    Folder?  @relation(fields: [folderId], references: [id], onDelete: Cascade)
 }
 
 model Folder {

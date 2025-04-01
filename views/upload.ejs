@@ -45,8 +45,7 @@
     <% if (files && files.length > 0) { %>
       <% files.forEach(file => { %>
         <li><%= file.src %></li>
-        <button class="download-file" onclick="downloadFile('<%= file.src %>')">Download</button>
-        <% }) %>
+        <a href="/drive/download/<%= file.filePath %>">Download</a>        <% }) %>
     <% } %>
 
   <form action="/drive/upload:${folder.id}" method="post" enctype="multipart/form-data">

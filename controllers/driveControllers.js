@@ -70,24 +70,12 @@ async function getUploadForm(req, res, next) {
     const folder = await db.getFolderById(folderId);
     const files = await db.getFiles(folderId);
 
-    async function downloadFile(src) {
-      try {
-        const { data, error } = await supabase.supabase.storage
-          .from("upload")
-          .createSignedUrl(src, 360);
-        window.location.href = data.signedUrl;
-      } catch (error) {
-        console.error(error);
-      }
-    }
-
     res.render("upload", {
       title: "Upload",
       user: req.user,
       folderId,
       folder,
       files,
-      downloadFile,
     });
   } catch (error) {
     console.error(error);
@@ -98,9 +86,9 @@ async function getUploadForm(req, res, next) {
 async function postUploadForm(req, res, next) {
   try {
     const file = req.file;
-    const filePath = `upload/${Date.now()}-${file.originalname}`;
-
-    const { data, error } = await supabase.supabase.storage
+    const filePath = `${Date.now()}-${file.originalname}`;
+    console.log("taki file: ", file);
+    const { datas, error } = await supabase.supabase.storage
       .from("upload")
       .upload(filePath, file.buffer, {
         contentType: file.mimetype,
@@ -109,13 +97,22 @@ async function postUploadForm(req, res, next) {
     // ADD LINK TO A FILE IN LOCAL DB
     // TODO: SIZE && MIMETYPE
     const src = `${supabase.supabaseUrl}/storage/v1/object/public/upload/${filePath}`;
-    const title = "Tu tytul";
+    const title = file.originalname;
+    const localPath = filePath;
     const folderId = req.body.parentId;
     const userId = req.body.userId;
-    const size = 10;
-    const mimetype = "txt";
+    const size = file.size;
+    const mimetype = file.mimetype;
 
-    await db.createFile(src, title, folderId, userId, size, mimetype);
+    await db.createFile(
+      src,
+      title,
+      folderId,
+      userId,
+      size,
+      mimetype,
+      localPath
+    );
     res.redirect("/");
   } catch (error) {
     console.error(error);
